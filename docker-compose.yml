@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: insider-case
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+    volumes:
+      - insider-case-data:/var/lib/mysql
+    network_mode: bridge
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+
+  insider-case:
+    image: salihdeg/insider-case
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: insider-case
+    build: .
+    ports:
+      - 3000:3000
+    links:
+      - db:mysql
+    network_mode: bridge
+
+volumes:
+  insider-case-data:
