@@ -16,6 +16,16 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
 
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db:db
+    network_mode: bridge
+
   insider-case:
     image: salihdeg/insider-case
     depends_on:
